@@ -26,16 +26,19 @@ app.post('/gpsdata', async (req, res) => {
     const database = client.db('Sweeper_Monitoring'); // Replace with your actual database name
     const collection = database.collection('Sample');
 
-    // Create a new document with GPS data
-    const result = await collection.insertOne({
-      latitude: gpsData.latitude,
-      longitude: gpsData.longitude,
-      date: gpsData.date,
-      time: gpsData.time
-    });
+    // Create an array to store multiple GPS data points
+    const gpsDataArray = Array.isArray(gpsData) ? gpsData : [gpsData];
 
-    console.log(`GPS data saved to MongoDB. Document ID: ${result.insertedId}`);
-    res.status(200).json({ status: 'OK', insertedId: result.insertedId });
+    // Insert multiple documents with GPS data
+    const result = await collection.insertMany(gpsDataArray.map(data => ({
+      latitude: data.latitude,
+      longitude: data.longitude,
+      date: data.date,
+      time: data.time
+    })));
+
+    console.log(`GPS data saved to MongoDB. Number of documents inserted: ${result.insertedCount}`);
+    res.status(200).json({ status: 'OK', insertedCount: result.insertedCount });
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: 'Internal Server Error', error: error.message });
