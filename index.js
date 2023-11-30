@@ -31,11 +31,11 @@ app.post('/gpsdata', async (req, res) => {
 
     // Insert multiple documents with GPS data
     const result = await collection.insertMany(gpsDataArray.map(data => ({
-      latitude: data.latitude,
-      longitude: data.longitude,
-      date: data.date,
-      time: data.time,
-      speed: data.speed
+      Latitude: data.Latitude,
+      Longitude: data.Longitude,
+      Date: data.Date,
+      Time: data.Time,
+      Speed: data.Speed
     })));
 
     console.log(`GPS data saved to MongoDB. Number of documents inserted: ${result.insertedCount}`);
