@@ -34,7 +34,8 @@ app.post('/gpsdata', async (req, res) => {
       latitude: data.latitude,
       longitude: data.longitude,
       date: data.date,
-      time: data.time
+      time: data.time,
+      speed: data.speed
     })));
 
     console.log(`GPS data saved to MongoDB. Number of documents inserted: ${result.insertedCount}`);
