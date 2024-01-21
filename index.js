@@ -140,6 +140,31 @@ app.post('/ledstatus', async (req, res) => {
   }
 });
 
+app.get('/getledstatus', async (req, res) => {
+  try {
+    // Connect to MongoDB Atlas
+    client = new MongoClient(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+
+    // Access the database and collection for LED status
+    const database = client.db('Sweeper_Monitoring'); // Replace with your actual database name
+    const collection = database.collection('LedStatus');
+
+    // Retrieve all LED status documents
+    const ledStatusData = await collection.find({}).toArray();
+
+    console.log('LED status data retrieved from MongoDB:', ledStatusData);
+    res.status(200).json({ status: 'OK', data: ledStatusData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 'Internal Server Error', error: error.message });
+  } finally {
+    // Close the MongoDB connection
+    if (client) {
+      await client.close();
+    }
+  }
+});
 // Sample API endpoint for testing
 app.get('/test', (req, res) => {
   res.json({ message: 'Server is up and running!' });
